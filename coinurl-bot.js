@@ -10,22 +10,29 @@ var urls =
 
 //DO NOT EDIT BELOW
 //imacro code
-var macro;
+var macro_open, macro_click, macro_close;
 
-macro ="CODE:";
-macro +="SET !ERRORIGNORE YES"+"\n";
-macro +="TAB T=1"+"\n";
-macro +="TAB OPEN"+"\n";
-macro +="TAB T=2"+"\n";
-macro +="URL GOTO=http://cur.lv/{{id}}"+"\n";
+macro_open ="CODE:";
+macro_open +="SET !ERRORIGNORE YES"+"\n";
+macro_open +="TAB T=1"+"\n";
+macro_open +="TAB OPEN"+"\n";
+macro_open +="TAB T=2"+"\n";
+macro_open +="URL GOTO=http://cur.lv/{{id}}";
+
+macro_click ="CODE:";
+macro_click +="FRAME F=2"+"\n";
+macro_click +="TAG POS=1 TYPE=A ATTR=ID:skip-ad"
+
+macro_close ="CODE:";
+macro_close +="TAB CLOSE";
 
 //declare sleep function
 function sleep(milliseconds) {
   var start = new Date().getTime();
   for (var i = 0; i < 1e7; i++) {
-    if ((new Date().getTime() - start) > milliseconds){
-      break;
-    }
+	if ((new Date().getTime() - start) > milliseconds){
+	  break;
+	}
   }
 }
 
@@ -34,15 +41,22 @@ for(var i in urls)
 {
 	var url = urls[i];
 	
-	//set the url to macro
+	//open url
 	iimSet("id",url);
-	iimPlay(macro);
+	iimPlay(macro_open);
 	
 	//10 to 20 second pause
 	var randomtime = 10 + (Math.floor(Math.random()*11));
 	sleep(randomtime * 1000);
 	
+	//click "skip ad"
+	iimPlay(macro_click);
+	
+	//5 to 15 second pause
+	var randomtime = 5 + (Math.floor(Math.random()*11));
+	sleep(randomtime * 1000);
+	
 	//close tab
-	iimPlay("CODE:TAB CLOSE");
+	iimPlay(macro_close);
 	sleep(1000);
 }
